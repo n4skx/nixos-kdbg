@@ -5,7 +5,7 @@ My configuration for kernel debugging in NixOS, with nested virtualization suppo
 ## Bootloader
 Change `kvm_intel` to `kvm_amd` if you are using a AMD processor.
 
-```
+```nix
 boot = {
 	loader = {
 		systemd-boot.enable = true;
@@ -18,7 +18,7 @@ boot = {
 ## Enable libvirt
 `vhostUserPackages = [ pkgs.virtiofsd ];` is optional.
 
-```
+```nix
 virtualisation.libvirtd = {
   enable = true;
   qemu = {
@@ -38,9 +38,9 @@ virtualisation.libvirtd = {
 ```
 
 Now add yourself to `libvirtd` group:
-`
+```nix
 users.users.<your-username>.extraGroups = [ "libvirtd" ];
-`
+```
 
 # Preparing VM
 This section is mostly stolen from nixos.wiki/wiki/Kernel_Debugging_with_QEMU.
@@ -53,7 +53,7 @@ $ git clone https://github.com/torvalds/linux.git
 
 ## Dependencies
 After successfully cloning, create a `shell.nix` in the same directory, with the following content:
-```
+```nix
 { pkgs ? import <nixpkgs> {} }:
 
 pkgs.stdenv.mkDerivation {
