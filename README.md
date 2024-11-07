@@ -83,6 +83,7 @@ Enter nix shell running:
 $ nix-shell shell.nix 
 ```
 
+> [!TIP]
 > It's highly recommended to spawn a tmux right after entering nix-shell, doing so will prevent massive nix-shell usage.
 
 ## Generate KVM config
@@ -94,7 +95,10 @@ $ ./scripts/config --set-val DEBUG_INFO y --set-val DEBUG y  --set-val GDB_SCRIP
 $ make -j $(nproc)
 ```
 
+> [!NOTE]
 > This section assumes that you are under nix-shell. 
+
+> [!NOTE]
 > I had to run `./scripts/config -e DEBUG_INFO_DWARF5` due to some weird errors when using gdb, that may be your case too. See: github.com/deepseagirl/easylkb/issues/4
 
 ## Create a bootable NixOS image
@@ -121,6 +125,7 @@ In another terminal instance (or tmux panel), in the linux source directory, run
 # pwngdb -ex "target remote :1234" ./vmlinux
 ```
 
+> [!IMPORTANT] 
 > Sudo is required for page table tranlation.
 
 Now you should have a working kernel debugging setup :).
