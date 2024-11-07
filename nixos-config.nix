@@ -1,69 +1,59 @@
 { pkgs, lib, modulesPath, ... }:
 
 {
-  imports = [
-    (modulesPath + "/profiles/qemu-guest.nix")
-  ];
+  imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
 
   networking.firewall.enable = false;
 
   boot = {
-  	isContainer = true;
-  	initrd.enable = false;
+    isContainer = true;
+    initrd.enable = false;
 
-  	loader = {
-			grub.enable = false;
-  		initScript.enable = true;
-  	};
+    loader = {
+      grub.enable = false;
+      initScript.enable = true;
+    };
   };
 
   documentation = {
-   	doc.enable = false;
-   	info.enable = false;
-   	man.enable = false;
-   	nixos.enable = false;
- 	};
+    doc.enable = false;
+    info.enable = false;
+    man.enable = false;
+    nixos.enable = false;
+  };
 
-	services = {
-		getty = {
-		  helpLine = ''
-		    Small kernel exploitation box.
+  services = {
+    getty = {
+      helpLine =
+        "  Small kernel exploitation box.\n\n  Login with root and empty password.\n  If you are connect via serial console:\n  Type Ctrl-a c to switch to the qemu console\n  and `quit` to stop the VM.\n";
 
-		    Login with root and empty password.
-		    If you are connect via serial console:
-		    Type Ctrl-a c to switch to the qemu console
-		    and `quit` to stop the VM.
-		  '';
+      autologinUser = lib.mkDefault "root";
+    };
+    openssh = {
+      enable = true;
+      settings = {
+        PermitRootLogin = "yes";
+        "PermitEmptyPasswords" = "yes";
+      };
+    };
+  };
 
-		  autologinUser = lib.mkDefault "root";
-		};
-		openssh = {
-			enable = true;
-			settings = {
-				PermitRootLogin = "yes";
-				"PermitEmptyPasswords" = "yes";
-			};
-		};
-	};
+  users.extraUsers = {
+    root = {
+      #shell = pkgs.fish;
+      initialHashedPassword = "";
+    };
+  };
 
-	users.extraUsers = {
-		root = {
-			#shell = pkgs.fish;
-  		initialHashedPassword = "";
-		};
-	};
+  console = {
+    enable = true;
+    keyMap = "br-abnt2";
+  };
 
-	console = {
-		enable = true;
-		keyMap = "br-abnt2";
-	};
+  systemd.services = { "serial-getty@ttyS0".enable = true; };
 
-	systemd.services = {
-		"serial-getty@ttyS0".enable = true;
-	};
-
-	programs = {
-	  bash.enableCompletion = false;
-	  command-not-found.enable = false;
-	};
+  programs = {
+    bash.enableCompletion = false;
+    command-not-found.enable = false;
+  };
 }
